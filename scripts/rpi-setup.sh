@@ -40,40 +40,9 @@ docker --version
 sudo docker run hello-world
 docker images
 
-# Create and configure the Docker Compose directory for Home Assistant
-echo "Creating and configuring Docker Compose for Home Assistant..."
-mkdir -p docker/homeAssistant
-cd docker/homeAssistant/
-
-# Create the docker-compose.yml file for Home Assistant
-echo "Creating docker-compose.yml for Home Assistant..."
-cat <<EOF > docker-compose.yml
----
-version: '3'
-services:
-    homeassistant:
-        image: lscr.io/linuxserver/homeassistant
-        container_name: homeassistant
-        network_mode: host
-        environment:
-            - PUID=1000
-            - PGID=1000
-            - TZ=Europe/Berlin
-        volumes:
-            - /home/pi/docker/homeAssistant/data:/config
-EOF
-
-# Display the docker-compose.yml file
-echo "Displaying docker-compose.yml file..."
-cat docker-compose.yml
-
 # Start Home Assistant with Docker Compose
 echo "Starting Home Assistant with Docker Compose..."
 sudo docker compose up -d
-
-# Edit the Home Assistant configuration file
-echo "Editing the Home Assistant configuration file..."
-vim configuration.yaml
 
 # Edit the Raspberry Pi configuration file
 echo "Editing the Raspberry Pi configuration file..."
