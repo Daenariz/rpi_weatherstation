@@ -21,9 +21,9 @@ echo "Enabling 1-Wire interface..."
 sudo raspi-config nonint do_onewire 0 || error_exit "Enabling the 1-Wire interface failed." 
 
 # Configure GPIO for 1-Wire
-echo "Configuring GPIO for 1-Wire on GPIO4..."
+echo "Configuring GPIO for 1-Wire on GPIO2..."
 sudo cp /boot/firmware/config.txt /boot/firmware/config_backup.txt
-sudo sed -i '/^dtoverlay=w1-gpio/ s/.*/dtoverlay=w1-gpio,gpiopin=4/' /boot/firmware/config.txt || echo "dtoverlay=w1-gpio,gpiopin=4" | sudo tee -a /boot/firmware/config.txt
+sudo sed -i '/^dtoverlay=w1-gpio/ s/.*/dtoverlay=w1-gpio,gpiopin=2/' /boot/firmware/config.txt || echo "dtoverlay=w1-gpio,gpiopin=2" | sudo tee -a /boot/firmware/config.txt
 
 # Load 1-Wire Kernel Modules 
 
@@ -32,24 +32,24 @@ sudo modprobe w1-gpio || error_exit "Loading w1-gpio module failed."
 sudo modprobe w1-therm || error_exit "Loading w1-therm module failed." 
 
 # Verify 1-Wire Sensor 
-
-echo "Verifying 1-Wire sensor..."
-SENSOR_BASE="/sys/bus/w1/devices" 
-
-shopt -s nullglob
-sensor_dirs=("SENSOR_BASE"/28−*)
-if [ ${#sensor_dirs[@]} -gt 0 ]; then
-    SENSOR_DIR="${sensor_dirs[0]}"
-    echo "1-Wire sensor detected in directory: $SENSOR_DIR"
-    if [ -f "$SENSOR_DIR/w1_slave" ]; then
-       cat "$SENSOR_DIR/w1_slave"
-    else
-       echo "File w1_slave not found in sensor directory."
-    fi
-else
-    echo "1-Wire sensor not detected. Please check your wiring and sensor."
-fi
-shopt -u nullglob
+#
+#echo "Verifying 1-Wire sensor..."
+#SENSOR_BASE="/sys/bus/w1/devices" 
+#
+#shopt -s nullglob
+#sensor_dirs=("SENSOR_BASE"/28−*)
+#if [ ${#sensor_dirs[@]} -gt 0 ]; then
+#    SENSOR_DIR="${sensor_dirs[0]}"
+#    echo "1-Wire sensor detected in directory: $SENSOR_DIR"
+#    if [ -f "$SENSOR_DIR/w1_slave" ]; then
+#       cat "$SENSOR_DIR/w1_slave"
+#    else
+#       echo "File w1_slave not found in sensor directory."
+#    fi
+#else
+#    echo "1-Wire sensor not detected. Please check your wiring and sensor."
+#fi
+#shopt -u nullglob
 echo "1-Wire configuration completed." 
 
 
@@ -58,4 +58,4 @@ echo "1-Wire configuration completed."
 #echo "Opening Raspberry Pi configuration file for editing..."
 #sudo nano /boot/firmware/config.txt 
 
-echo "Script completed successfully." 
+echo "Script completed successfully. Please reboot." 
