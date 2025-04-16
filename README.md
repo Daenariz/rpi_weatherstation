@@ -32,18 +32,9 @@ sudo modprobe w1-gpio
 sudo modprobe w1-therm
 ```
 
-To check if the DS18B20 has connected, go to the directory of the 1-Wire devices and list those available:
-
-```bash
-cd /sys/bus/w1/devices/
-ls
-```
-
-You should now see a folder that starts with `28-xxxxxx`. This is the serial number of the sensor. You can read out the raw temperature directly in the terminal by going to the folder `cd 28-xxxxxx` and typing in `cat w1_slave`. The temperature is provided after the `t=` in thousands of a degree.
-
 ## Change the Default Pin
 
-If you want to change the default pin from GPIO4 to another pin, you need to modify the `/boot/config.txt` file. Add the following line to the file:
+If you want to change the default pin from GPIO4 to another pin, you need to modify the `/boot/firmware/config.txt` file. Add the following line to the file:
 
 ```bash
 dtoverlay=w1-gpio,gpiopin=X
@@ -56,6 +47,16 @@ dtoverlay=w1-gpio,gpiopin=2
 ```
 
 After making this change, reboot your Raspberry Pi (`sudo reboot`).
+ 
+Now to check after rebooting if the DS18B20 has connected, go to the directory of the 1-Wire devices and list those available:
+
+```bash
+cd /sys/bus/w1/devices/
+ls
+```
+
+You should now see a folder that starts with `28-xxxxxx`. This is the serial number of the sensor. You can read out the raw temperature directly in the terminal by going to the folder `cd 28-xxxxxx` and typing in `cat w1_slave`. The temperature is provided after the `t=` in thousands of a degree.
+
 
 ## Setting Up a systemd Service for the tempsensor.py Script 
 
