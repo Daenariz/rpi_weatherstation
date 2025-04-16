@@ -20,10 +20,11 @@ sudo apt-get -y install git vim || error_exit "Installation of git and vim faile
 echo "Enabling 1-Wire interface..."
 sudo raspi-config nonint do_onewire 0 || error_exit "Enabling the 1-Wire interface failed." 
 
-# Configure GPIO for 1-Wire on GPIO Pin 2
-echo "Configuring GPIO for 1-Wire on GPIO2..."
+# Configure GPIO for 1-Wire on GPIO Pin 17
+echo "Configuring GPIO for 1-Wire on GPIO17..."
 sudo cp /boot/firmware/config.txt /boot/firmware/config_backup.txt
-sudo sed -i '/^dtoverlay=w1-gpio/ s/.*/dtoverlay=w1-gpio,gpiopin=2/' /boot/firmware/config.txt || echo "dtoverlay=w1-gpio,gpiopin=2" | sudo tee -a /boot/firmware/config.txt
+sudo sed -i '/^dtoverlay=w1-gpio/ s/.*/dtoverlay=w1-gpio,gpiopin=17/' /boot/firmware/config.txt || echo "dtoverlay=w1-gpio,gpiopin=17" | sudo tee -a /boot/firmware/config.txt
+# Maybe use pinctrl set 17 pu
 
 # Load 1-Wire Kernel Modules 
 
