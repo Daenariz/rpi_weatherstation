@@ -40,13 +40,16 @@ If you want to change the default pin from GPIO4 to another pin, you need to mod
 dtoverlay=w1-gpio,gpiopin=X
 ```
 
-Replace `X` with the GPIO pin number you want to use. For example, to use GPIO2, you would add:
+Replace `X` with the GPIO pin number you want to use. For example, to use GPIO17, you would add:
 
 ```bash
-dtoverlay=w1-gpio,gpiopin=2
+dtoverlay=w1-gpio,gpiopin=17
 ```
 
 After making this change, reboot your Raspberry Pi (`sudo reboot`).
+
+To use OneWire-Devices connect a 4.7 kOhm pull-up resistor from the data wire to Vcc.
+If you dont have one handy use GPIO-Pin 2. However this workaround prevents you from using the I2C connection on Pins 2 and 3.
  
 Now to check after rebooting if the DS18B20 has connected, go to the directory of the 1-Wire devices and list those available:
 
