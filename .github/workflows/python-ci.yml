@@ -14,20 +14,20 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install glob2  # glob2 ist eine erweiterte Version von glob und ggf.  nötig
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi #Installiert Dependencies falls die definiert sind
+        pip install glob2 
+        
 
     - name: Create Mock Device(s)
       run: |
-          mkdir -p /sys/bus/w1/devices/28-00000000000a
+          sudo mkdir -p /sys/bus/w1/devices/28-00000000000a
           echo "75 01 4b 46 7f ff 0d 10 52 : crc=52 YES" > /sys/bus/w1/devices/28-00000000000a/w1_slave
-          echo "75 01 4b 46 7f ff 0d 10 52 t=23125" >> /sys/bus/w1/devices/28-00000000000a/w1_slave #Simulierte Temperatur
-
+          echo "75 01 4b 46 7f ff 0d 10 52 t=23125" >> /sys/bus/w1/devices/28-00000000000a/w1_slave
+    
     - name: Validate imports
       run: |
         python -c "import os, glob, time, datetime, csv"
