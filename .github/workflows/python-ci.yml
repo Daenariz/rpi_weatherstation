@@ -34,7 +34,7 @@ jobs:
         
     - name: Modify script to use mock devices
       run: |
-        sed -i 's/\/sys\/bus\/w1\/devices/.\/mock_devices/g' scripts/your_script_name.py
+        sed -i 's/\/sys\/bus\/w1\/devices/.\/mock_devices/g' scripts/tempsensor.py
     
     - name: Test read_temp
       run: |
