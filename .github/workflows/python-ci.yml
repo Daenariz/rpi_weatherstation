@@ -1,0 +1,29 @@
+name: Python Data Logger Check
+
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install pytest
+
+    - name: Validate imports
+      run: |
+        python -c "from ${GITHUB_WORKSPACE##*/} import read_temp, write_to_csv"
+
+    - name: Quick execution test
+      run: |
+        echo 'print(read_temp())' | python -i - <(sed 's/while True:/for _ in range(2):/' your_script_name.py)
