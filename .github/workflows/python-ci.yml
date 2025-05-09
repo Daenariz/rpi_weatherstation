@@ -21,18 +21,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install glob2 
         
-
-    - name: Create Mock Device(s)
+    - name: Create Mock Device(s) in a temporary directory
       run: |
-          sudo mkdir -p /sys/bus/w1/devices/28-00000000000a
-          echo "75 01 4b 46 7f ff 0d 10 52 : crc=52 YES" > /sys/bus/w1/devices/28-00000000000a/w1_slave
-          echo "75 01 4b 46 7f ff 0d 10 52 t=23125" >> /sys/bus/w1/devices/28-00000000000a/w1_slave
-    
+        mkdir -p ./mock_devices/28-00000000000a
+        echo "75 01 4b 46 7f ff 0d 10 52 : crc=52 YES" > ./mock_devices/28-00000000000a/w1_slave
+        echo "75 01 4b 46 7f ff 0d 10 52 t=23125" >> ./mock_devices/28-00000000000a/w1_slave
+ 
     - name: Validate imports
       run: |
         python -c "import os, glob, time, datetime, csv"
         python -c "from scripts.tempsensor import read_temp, write_to_csv"
-
+        
+    - name: Modify script to use mock devices
+      run: |
+        sed -i 's/\/sys\/bus\/w1\/devices/.\/mock_devices/g' scripts/your_script_name.py
+    
     - name: Test read_temp
       run: |
         python -c "import scripts.tempsensor; print(scripts.tempsensor.read_temp())"
