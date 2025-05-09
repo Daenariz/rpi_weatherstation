@@ -40,7 +40,7 @@ jobs:
       run: |
         python -c "import scripts.tempsensor; print(scripts.tempsensor.read_temp())"
 
-    - name: Prevent infinite Loop
-      run: |
-        sed -i 's/while True:/for _ in range(1):/g' scripts/tempsensor.py
-        python scripts/tempsensor.py
+#    - name: Prevent infinite Loop
+#      run: |
+#        sed -i 's/while True:/for _ in range(1):/g' scripts/tempsensor.py
+#        python scripts/tempsensor.py
