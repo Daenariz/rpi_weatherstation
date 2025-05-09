@@ -32,7 +32,26 @@ sudo modprobe w1-gpio
 sudo modprobe w1-therm
 ```
 
-To check if the DS18B20 has connected, go to the directory of the 1-Wire devices and list those available:
+## Change the Default Pin
+
+If you want to change the default pin from GPIO4 to another pin, you need to modify the `/boot/firmware/config.txt` file. Add the following line to the file:
+
+```bash
+dtoverlay=w1-gpio,gpiopin=X
+```
+
+Replace `X` with the GPIO pin number you want to use. For example, to use GPIO17, you would add:
+
+```bash
+dtoverlay=w1-gpio,gpiopin=17
+```
+
+After making this change, reboot your Raspberry Pi (`sudo reboot`).
+
+To use OneWire-Devices connect a 4.7 kOhm pull-up resistor from the data wire to Vcc.
+If you dont have one handy use GPIO-Pin 2. However this workaround prevents you from using the I2C connection on Pins 2 and 3.
+ 
+Now to check after rebooting if the DS18B20 has connected, go to the directory of the 1-Wire devices and list those available:
 
 ```bash
 cd /sys/bus/w1/devices/
@@ -41,20 +60,38 @@ ls
 
 You should now see a folder that starts with `28-xxxxxx`. This is the serial number of the sensor. You can read out the raw temperature directly in the terminal by going to the folder `cd 28-xxxxxx` and typing in `cat w1_slave`. The temperature is provided after the `t=` in thousands of a degree.
 
-## Change the Default Pin
 
-If you want to change the default pin from GPIO4 to another pin, you need to modify the `/boot/config.txt` file. Add the following line to the file:
+## Setting Up a systemd Service for the tempsensor.py Script 
 
-```bash
-dtoverlay=w1-gpio,gpiopin=X
+A systemd service has been configured to automatically start the tempsensor.py script upon system boot. This script is responsible for reading temperature data from a sensor and logging it. 
+Service Configuration Details 
+
+Here is the configuration of the service file:
+
 ```
+[Unit]
+Description=tempsensor.py service
+After=network.target
 
-Replace `X` with the GPIO pin number you want to use. For example, to use GPIO2, you would add:
+[Service]
+ExecStart=python /your/path/to/rpi_weatherstation/scripts/tempsensor.py
+WorkingDirectory=/your/path/to/rpi_weatherstation/
+Restart=always
+User=****
+Environment=PYTHONUNBUFFERED=1
 
-```bash
-dtoverlay=w1-gpio,gpiopin=2
-```
+[Install]
+WantedBy=multi-user.target
+``` 
+ 
 
-After making this change, reboot your Raspberry Pi (`sudo reboot`).
+    Description:  Provides a brief description of the service and its purpose.
+    After:  Ensures that the network service is up and running before executing the script.
+    ExecStart:  Specifies the command to start the Python script.
+    WorkingDirectory:  Sets the working directory from which the script is executed.
+    Restart:  Configures the service to automatically restart if it stops unexpectedly.
+    User:  The user under which the service runs. Replace `****` with the appropriate user name.
+    Environment:  Sets environment variables, in this case ensuring Python does not buffer output.
+
 
 This should cover the basics of connecting and reading from the DS18B20 temperature sensor with your Raspberry Pi. Happy monitoring!
